@@ -2,11 +2,11 @@ import React from 'react';
 import fetch from 'isomorphic-unfetch';
 import renderHTML from 'react-render-html';
 
-const ArticlePage = ({ article, content }) => (
+const ArticlePage = article => (
     <div>
         <h1>{article['Content~Marketing/Title-be']}</h1>
         <p>{article['Content~Marketing/Subtitle-be']}</p>
-        {renderHTML(content['8f0393b3-ab15-11e9-afc5-ffb30d2a8ffb'])}
+        {renderHTML(article['Content~Marketing/Text-be'])}
     </div>
 );
 
