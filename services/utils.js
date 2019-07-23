@@ -1,4 +1,4 @@
-import { APP_NAME, SECRET_NAME, LOCALES } from './constants';
+import { APP_NAME, LOCALES } from './constants';
 
 export const flatMap = (arr, f) =>
     arr.reduce((acc, cur) => acc.concat(f(cur)), []);

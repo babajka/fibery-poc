@@ -1,13 +1,13 @@
 import Fibery from 'fibery-unofficial';
 
-import { APP_NAME, DOC_SECRET_NAME, LOCALES, DOC_FORMAT } from './constants';
+import { DOC_SECRET_NAME, LOCALES, DOC_FORMAT } from './constants';
 import {
     FIBERY_DEFAULT,
     ARTICLE_FIELDS,
     CONTENT_FIELDS,
     RELATED_ENTITIES,
 } from './queries';
-import { addAppName, appendLocale, toJson } from './utils';
+import { addAppName, appendLocale } from './utils';
 
 const { FIBERY_HOST, FIBERY_TOKEN } = process.env;
 const fibery = new Fibery({
@@ -27,7 +27,7 @@ const mapDocs = (article, docs, keyBySecret) =>
         return articleAcc;
     }, article);
 
-export const getArticleData = async publicId => {
+export const getArticleData = async slug => {
     const [article] = await fibery.entity.query(
         {
             'q/from': addAppName('Article'),
@@ -37,13 +37,16 @@ export const getArticleData = async publicId => {
                 ...CONTENT_FIELDS,
                 ...RELATED_ENTITIES,
             ],
-            'q/where': ['=', 'fibery/public-id', '$id'],
+            'q/where': ['=', addAppName('Slug-be'), '$slug'],
             'q/limit': 1,
         },
         {
-            $id: publicId,
+            $slug: slug,
         }
     );
+    if (!article) {
+        return null;
+    }
     const contentKeyBySecret = {};
     const docs = await Promise.all(
         LOCALES.map(lang => {

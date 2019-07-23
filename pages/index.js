@@ -1,16 +1,22 @@
 import React from 'react';
-import fetch from 'isomorphic-unfetch';
-import renderHTML from 'react-render-html';
+import Link from 'next/link';
 
-const ArticlePage = article => (
+const ARTICLES = [
+    { slug: 'sample', title: 'Sample Article' },
+    { slug: 'dushy', title: 'Дзе жывуць душы беларусаў?' },
+];
+
+export default () => (
     <div>
-        <h1>{article['Content~Marketing/Title-be']}</h1>
-        <p>{article['Content~Marketing/Subtitle-be']}</p>
-        {renderHTML(article['Content~Marketing/Text-be'])}
+        <h2>Hello, Fibery.io + Next.js!</h2>
+        <ul>
+            {ARTICLES.map(({ slug, title }) => (
+                <li key={slug}>
+                    <Link href="/articles/[slug]" as={`/articles/${slug}`}>
+                        <a>{title}</a>
+                    </Link>
+                </li>
+            ))}
+        </ul>
     </div>
 );
-
-ArticlePage.getInitialProps = async () =>
-    fetch('http://localhost:3000/api/article').then(res => res.json());
-
-export default ArticlePage;
