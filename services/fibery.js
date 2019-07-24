@@ -16,8 +16,7 @@ const fibery = new Fibery({
 });
 
 const mapDocs = (article, docs, keyBySecret) =>
-    docs.reduce((articleAcc, cur) => {
-        const doc = JSON.parse(cur);
+    docs.reduce((articleAcc, doc) => {
         if (!doc) {
             return articleAcc;
         }
@@ -48,13 +47,12 @@ export const getArticleData = async slug => {
         return null;
     }
     const contentKeyBySecret = {};
-    const docs = await Promise.all(
-        LOCALES.map(lang => {
-            const key = appendLocale(addAppName('Text'))(lang);
-            const secret = article[key][DOC_SECRET_NAME];
-            contentKeyBySecret[secret] = key;
-            return fibery.document.get(secret, DOC_FORMAT);
-        })
-    );
+    const secrets = LOCALES.map(lang => {
+        const key = appendLocale(addAppName('Text'))(lang);
+        const secret = article[key][DOC_SECRET_NAME];
+        contentKeyBySecret[secret] = key;
+        return { secret };
+    });
+    const docs = await fibery.document.getBatch(secrets, DOC_FORMAT);
     return mapDocs(article, docs, contentKeyBySecret);
 };
