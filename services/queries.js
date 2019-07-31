@@ -32,6 +32,12 @@ const SUBQUERIES = {
         'q/select': [
             ...FIBERY_DEFAULT,
             addAppName('name'),
+            {
+                'avatar/avatars': {
+                    'q/select': ['fibery/secret'],
+                    'q/limit': 'q/no-limit',
+                },
+            },
             ...mapAppNameLocales(['FirstName', 'LastName', 'Bio']),
         ],
         'q/limit': 'q/no-limit',

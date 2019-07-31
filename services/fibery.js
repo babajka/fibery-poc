@@ -35,6 +35,12 @@ export const getArticleData = async slug => {
                 ...ARTICLE_FIELDS,
                 ...CONTENT_FIELDS,
                 ...RELATED_ENTITIES,
+                {
+                    'fibery/files': {
+                        'q/select': ['fibery/secret'],
+                        'q/limit': 'q/no-limit',
+                    },
+                },
             ],
             'q/where': ['=', addAppName('Slug-be'), '$slug'],
             'q/limit': 1,
@@ -56,3 +62,5 @@ export const getArticleData = async slug => {
     const docs = await fibery.document.getBatch(secrets, DOC_FORMAT);
     return mapDocs(article, docs, contentKeyBySecret);
 };
+
+export default fibery;
